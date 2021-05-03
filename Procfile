@@ -1,0 +1,1 @@
+web sh setup.sh && streamlit run population1.py
