@@ -1,4 +1,3 @@
-import datetime as datetime
 import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
@@ -33,7 +32,7 @@ Choose the sectors and dates you want to see the population statitics from the l
 #Change layout by search markdown cheatsheet
 # https://towardsdatascience.com/how-to-get-stock-data-using-python-c0de1df17e75
 
-df = pd.read_csv(r'C:\Users\IMBS\Downloads\programming\Data\pop_data\WPP2019_POP_F01_1_TOTAL_POPULATION_BOTH_SEXES.csv', header=[0], thousands = ' ')
+df = pd.read_csv(r'https://github.com/Hamed-ehia/streamlit-apps/blob/main/WPP2019_POP_F01_1_TOTAL_POPULATION_BOTH_SEXES.csv', header=[0], thousands = ' ')
 df.columns = df.columns.astype(str)
 df = df.rename(columns = {'Region, subregion, country or area':'country'})
 
@@ -134,8 +133,10 @@ def plot_sf(x):
 
 if st.button('Show Plots'): # if you want to show immidiately without button
     st.header('Stock Closing Price')
-    for i in list(df_selected_sector.country)[:num_company]: #Number of plots not number of selections
-        plot_sf(i)
+    for i in list(df_selected_sector.country):
+      plot_sf(i)
+    #for i in list(df_selected_sector.country)[:num_company]: #Number of plots not number of selections
+        
 
 
 
