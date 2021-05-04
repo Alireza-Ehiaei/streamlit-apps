@@ -1,1 +1,1 @@
-web sh setup.sh && streamlit run population1.py
+web sh setup.sh && streamlit run population2.py
