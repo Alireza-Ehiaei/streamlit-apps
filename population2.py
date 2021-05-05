@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import streamlit as st
 from matplotlib.pyplot import figure
+import Pillow as PIL
 from PIL import Image
 
 ######################
