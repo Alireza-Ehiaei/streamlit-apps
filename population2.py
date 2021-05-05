@@ -3,27 +3,42 @@ import matplotlib.pyplot as plt
 import numpy as np
 import streamlit as st
 from matplotlib.pyplot import figure
+from PIL import Image
 
-st.write(
+######################
+# Page Title
+######################
+st.write("""
+# Building a blooming world for all.
+""")
+image = Image.open("C:/Users/IMBS/Downloads/hugh-whyte-J8bU6-tAGy8-unsplash.jpg")
 
-  """
-# Numbers & Concepts 
-Hello!
+st.image(image, use_column_width=True, caption='Photo by Hugh Whyte on Unsplash')
+#Photo by <a href="https://unsplash.com/@opixels?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText">Hugh Whyte</a> on <a href="https://unsplash.com/s/photos/sustainable-development?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText">Unsplash</a>
+  
+
+st.write("""
+# Numbers & Concepts For Development
+
+### Hello!
 
 Thanks for showing interest to see this website! We are going 
-to have a new look at the **numbers**, and
- ***development & economic***  **  concepts.**  
+to have a new look at the ***numbers & concepts*** in the 
+fields of **development & economics**.  
 
-Searching data is consuming and can be sometime tedious if you don’t know how to filter, plot or download data, here you have 
-the easier ways to see and download data 
+
+Searching data can be sometimes a time-consuming and tedious 
+process, and if you don’t know how to filter, plot, etc., can 
+be a complicated task. Here you have easier ways to see and 
+download data, and also, be familiar with some concepts in 
+economics and development. Let's get started with population data around the world.
+
 """)
-#You've taken the first step towards being able to gain financial freedom and become your own boss. 
 
 st.markdown(""" 
 
 ## Population 
-Choose the sectors and dates you want to see the population statitics from the left sidebar, and download the table or chart. 
-
+Please select the sectors and dates you want to Visualize and Download the population statitics from the left sidebar.
 * **Selection based on:** Regin/country, Development, Income
 * **Data source:** [United Nations](https://population.un.org/wpp/Download/Standard/Population/)
 """)
@@ -32,7 +47,7 @@ Choose the sectors and dates you want to see the population statitics from the l
 #Change layout by search markdown cheatsheet
 # https://towardsdatascience.com/how-to-get-stock-data-using-python-c0de1df17e75
 
-df = pd.read_csv(r'https://github.com/Hamed-ehia/streamlit-apps/blob/main/WPP2019_POP_F01_1_TOTAL_POPULATION_BOTH_SEXES.csv', header=[0], thousands = ' ')
+df = pd.read_csv(r'https://raw.githubusercontent.com/Hamed-ehia/streamlit-apps/main/WPP2019_POP_F01_1_TOTAL_POPULATION_BOTH_SEXES.csv', header=[0], thousands = ' ', encoding='latin-1')
 df.columns = df.columns.astype(str)
 df = df.rename(columns = {'Region, subregion, country or area':'country'})
 
@@ -41,6 +56,7 @@ for col in df.loc[:, '1950':'2020']:
   df[col]  = df[col].str.replace(' ', '')
   df[col] = pd.to_numeric(df[col], errors='coerce') # coercing any errors to NaN
 df = df.dropna()
+
 
 st.sidebar.header('User Input Features')
 selected_year = st.sidebar.multiselect("Select Year", list(reversed(range(1950,2020))))
@@ -61,6 +77,7 @@ for m in range(0,len(selected_year)):
 #for slicing the columns values of the chosen list of column names
 df_selected_year = (df.loc[:, df.columns.isin(d)])
 
+
 st.sidebar.header('Population sectors')
 
 sector = df.groupby('Type')
@@ -73,16 +90,20 @@ selected_sector = st.sidebar.multiselect('Sector', sorted_sector_unique)
 # Filtering data
 
 df_selected_sector = df.loc[ (df['Type'].isin(selected_sector) ) ]
+#st.dataframe(df_selected_sector.style.background_gradient(cmap='Reds').format("{:.2%}"), height=700)
 
-df_selected_sector
 
 sf1 = df_selected_sector.loc[:, df_selected_sector.columns.isin(df_selected_year)]
 
 sf2= df_selected_sector.loc[:,'country']
 
+
+if (selected_sector):
 #To concatenate DataFrames along column, you can specify the axis parameter as 1 :
-sf= pd.concat([sf2, sf1], axis=1)
-st.write(sf)
+   sf= pd.concat([sf2, sf1], axis=1)
+   st.write('Summary Table for the population of / based on; ',  ", ".join(selected_sector) ,'in years: ', " - ".join(d) )
+   st.dataframe(sf.style.background_gradient(cmap='viridis').format("{:.10}"), height=300)
+
 # sf = df_selected_sector.loc[:,df_selected_sector.columns.isin('country' df_selected_year)]
 # sf
 
@@ -131,13 +152,13 @@ def plot_sf(x):
 
 #num_company = st.sidebar.slider('country', 1, 10)
 
-if st.button('Show Plots'): # if you want to show immidiately without button
-    st.header('Stock Closing Price')
-    for i in list(df_selected_sector.country):
-      plot_sf(i)
-    #for i in list(df_selected_sector.country)[:num_company]: #Number of plots not number of selections
-        
-
+if (selected_sector):
+    if st.button('Show Plots'): # if you want to show immidiately without button
+        st.header('Stock Closing Price')
+        for i in list(df_selected_sector.country):
+          plot_sf(i)
+        #for i in list(df_selected_sector.country)[:num_company]: #Number of plots not number of selections
+      
 
 
 #st.line_chart(df[['1950']])
