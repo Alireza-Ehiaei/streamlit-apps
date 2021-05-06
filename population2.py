@@ -4,8 +4,8 @@ from pandas.plotting import register_matplotlib_converters
 import numpy as np
 import streamlit as st
 from matplotlib.pyplot import figure
-from PIL.Image import core as _imaging
 import base64
+import cv2
 
 ######################
 # Page Title
@@ -13,7 +13,7 @@ import base64
 st.write("""
 # Building a blooming world for all.
 """)
-image = Image.open("C:/Users/IMBS/Downloads/hugh-whyte-J8bU6-tAGy8-unsplash.jpg")
+image = cv2.imread("C:/Users/IMBS/Downloads/hugh-whyte-J8bU6-tAGy8-unsplash.jpg")
 
 st.image(image, use_column_width=True, caption='Photo by Hugh Whyte on Unsplash')
 #Photo by <a href="https://unsplash.com/@opixels?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText">Hugh Whyte</a> on <a href="https://unsplash.com/s/photos/sustainable-development?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText">Unsplash</a>

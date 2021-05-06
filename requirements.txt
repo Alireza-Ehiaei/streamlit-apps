@@ -2,5 +2,5 @@ matplotlib
 pandas
 numpy
 streamlit
-PIL.Image
+cv2
 base64
