@@ -2,5 +2,5 @@ matplotlib
 pandas
 numpy
 streamlit
-opencv-python-headless==4.2.0.32
+opencv-python
 base64
