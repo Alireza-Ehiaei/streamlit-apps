@@ -4,7 +4,7 @@ from pandas.plotting import register_matplotlib_converters
 import numpy as np
 import streamlit as st
 from matplotlib.pyplot import figure
-from PIL import Image
+from PIL.Image import core as _imaging
 import base64
 
 ######################
