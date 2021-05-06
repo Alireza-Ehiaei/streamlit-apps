@@ -41,7 +41,7 @@ st.markdown("""
 
 ## Population 
 Please select the sectors and dates you want to Visualize and Download the population statitics from the left sidebar.
-* **Selection based on:** Regin/country, Development, Income
+* **Selection based on:** regin, country, development group and income croupe.
 * **Data source:** [United Nations](https://population.un.org/wpp/Download/Standard/Population/)
 """)
 
