@@ -14,7 +14,7 @@ from PIL import Image
 st.write("""
 # Building a blooming world for all.
 """)
-image = Image.open("C:/Users/IMBS/Downloads/hugh-whyte-J8bU6-tAGy8-unsplash.jpg")
+image = Image.open("hugh-whyte-J8bU6-tAGy8-unsplash.jpg")
 
 st.image(image, use_column_width=True, caption='Photo by Hugh Whyte on Unsplash')
 #Photo by <a href="https://unsplash.com/@opixels?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText">Hugh Whyte</a> on <a href="https://unsplash.com/s/photos/sustainable-development?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText">Unsplash</a>
@@ -41,8 +41,12 @@ Please select the sectors and dates you want to Visualize and Download the popul
 * **Data source:** [United Nations](https://population.un.org/wpp/Download/Standard/Population/)
 """)
 
+image = Image.open("Photo_by_Ishan_@seefromthesky_on_Unsplash.jpg")  
+st.image(image, use_column_width=True, caption='Photo by Ishan @seefromthesky on Unsplash')
+
+
 ############# Reading Population data
-df = pd.read_csv(r"C:\Users\IMBS\Downloads\programming\Data\pop_data\WPP2019_POP_F01_1_TOTAL_POPULATION_BOTH_SEXES.csv", header=[0], encoding='latin-1')
+df = pd.read_csv("WPP2019_POP_F01_1_TOTAL_POPULATION_BOTH_SEXES.csv", header=[0], encoding='latin-1')
 df.columns = df.columns.astype(str)
 df = df.rename(columns = {'Region, subregion, country or area':'country'})
 
@@ -54,7 +58,7 @@ for col in df.loc[:, '1950':'2020']:
 
 ############# Reading Population growth rate data
 
-gf = pd.read_csv(r"C:\Users\IMBS\Downloads\programming\Data\pop_data\WPP2019_POP_F02_POPULATION_GROWTH_RATE.csv", header=[0], encoding='latin-1')
+gf = pd.read_csv("WPP2019_POP_F02_POPULATION_GROWTH_RATE.csv", header=[0], encoding='latin-1')
 gf.columns = gf.columns.astype(str)
 gf = gf.rename(columns = {'Region, subregion, country or area':'country'})
 
@@ -673,4 +677,5 @@ elif (selected_topic == 'Population Growth Rate'):
          plt.subplots_adjust(bottom=0.1)
          st.pyplot(fig2)
 
+#st.sidebar.write(' This app is created by ... any tips appreciated.')
 
