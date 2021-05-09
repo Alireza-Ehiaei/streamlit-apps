@@ -2,5 +2,5 @@ matplotlib
 pandas
 numpy
 streamlit
-base64
+base58==2.1.0
 PIL

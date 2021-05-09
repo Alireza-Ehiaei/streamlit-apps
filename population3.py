@@ -70,7 +70,7 @@ st.sidebar.header('User Input Features')
 
 selected_topic = st.sidebar.selectbox("Select Topic", ('Population', 'Population Growth Rate'))
 
-
+s=[]
 ####################" Work on population
 
 if (selected_topic == 'Population'):
@@ -540,6 +540,7 @@ elif (selected_topic == 'Population Growth Rate'):
 # Plotting line chart _ against years
        x = np.arange(len(year_range))  # the label locations
        fig1, yx = plt.subplots()
+
        
       
       # check if ther is one columd plots scatter instead of lines
@@ -566,6 +567,7 @@ elif (selected_topic == 'Population Growth Rate'):
        plt.margins(0.09)
        plt.subplots_adjust(bottom=0.1)
        st.pyplot(fig1)
+
 
 
 #Plotting line chart _ against subjects (groups, country..)
@@ -670,3 +672,5 @@ elif (selected_topic == 'Population Growth Rate'):
          plt.margins(0.09)
          plt.subplots_adjust(bottom=0.1)
          st.pyplot(fig2)
+
+
