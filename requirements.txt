@@ -3,4 +3,5 @@ pandas
 numpy
 streamlit
 base58==2.1.0
-PIL
+Pillow==8.2.0
+
