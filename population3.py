@@ -1,3 +1,6 @@
+import matplotlib as mpl
+import locale
+#import SessionState
 import pandas as pd
 from matplotlib import pyplot as plt
 import numpy as np
@@ -5,13 +8,8 @@ import streamlit as st
 from matplotlib.pyplot import figure
 import base64
 from PIL import Image
-import matplotlib as mpl
-import locale
-import plotly.graph_objects as go
-import SessionState
 
-
-session_state = SessionState.get(checkboxed=False)
+#session_state = SessionState.get(checkboxed=False)
 
 ######################
 # Page Title
@@ -90,6 +88,7 @@ selected_topic = st.sidebar.selectbox("Select Topic", ('Population', 'Population
 
 if (selected_topic == 'Population'):
       
+
       st.sidebar.header('World Population Prospects 2019:')
       st.sidebar.write(' Total population (both sexes combined) by region, subregion and country, annually for 1950-2100 (thousands)')
 
@@ -607,14 +606,15 @@ def line_chart_gr(ax, data):
  
 
 ################# Plotting - showing orders
-session_state_show = SessionState.get(show='', button_sent=False)
-button_sent= st.sidebar.button('Show Dataset')  
+#session_state_show = SessionState.get(show='', button_sent=False)
+#button_sent= st.sidebar.button('Show Dataset')  
+# if (button_sent)
 
-if (button_sent) and (len(time_period) > 0 ) and ((len(selected_sector_group) > 0) or (len(selected_sector_country) > 0)):
+if (len(time_period) > 0 ) and ((len(selected_sector_group) > 0) or (len(selected_sector_country) > 0)):
  
- session_state_show.button_sent =True
+ #session_state_show.button_sent =True
 
- if session_state_show.button_sent:
+ #if session_state_show.button_sent:
 
 
      
@@ -660,3 +660,16 @@ elif (session_state_show.button_sent ==False):
 
 st.sidebar.text("")
 st.sidebar.text("")
+
+
+# Cleaning the plot (useful if you want to draw new shapes without closing the figure
+# but quite useless for this particular example. I put it here as an example).
+
+#plt.gcf().clear()
+# checkbox
+
+st.sidebar.write(''' This app is created by' [A.Ehiaei] (https://www.linkedin.com/in/alireza-ehiaei-9280971a1/), any tips appreciated.''')
+    #df.numeric.describe()
+
+
+ 
