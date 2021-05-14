@@ -4,5 +4,5 @@ numpy
 streamlit
 base58==2.1.0
 Pillow==8.2.0
-locale
+
 
