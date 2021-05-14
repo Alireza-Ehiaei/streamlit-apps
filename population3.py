@@ -1,5 +1,5 @@
 import matplotlib as mpl
-import locale
+#import locale
 #import SessionState
 import pandas as pd
 from matplotlib import pyplot as plt
@@ -533,7 +533,7 @@ def bar_chart_gr(ax, data, colors=None, total_width=0.8, single_width=.5, legend
            x_tick_lable_list.append(str(data.T.index[item]))
        
        label= x_tick_lable_list  
-       plt.xticks(ticks=x_tick_list,labels=label, rotation=45,fontsize=8)
+       plt.xticks(ticks=x_tick_list,labels=label, rotation=80,fontsize=8)
 
        
        #ax.set_xticklabels(list(data.index))
