@@ -410,7 +410,8 @@ def bar_chart_time(ax, data, colors=None, total_width=0.8, single_width=.5, lege
        plt.subplots_adjust(bottom=0.1)
 
      
-       ax.ticklabel_format(axis="y",useOffset=False,style='plain', useLocale=True)
+       # ax.ticklabel_format(axis="y",useOffset=False,style='plain', useLocale=True)
+       ax.get_yaxis().set_major_formatter(mpl.ticker.FuncFormatter(lambda x, p: format(int(x), ',')))
 
       #For plotting chart
        st.pyplot(fig)
@@ -458,7 +459,8 @@ def line_chart_time(ax, data):
 
 
        # Changing scientific notation of numbers
-       ax.ticklabel_format(axis="y",useOffset=True,style='plain', useLocale=True)
+       # ax.ticklabel_format(axis="y",useOffset=True,style='plain', useLocale=True)
+       ax.get_yaxis().set_major_formatter(mpl.ticker.FuncFormatter(lambda x, p: format(int(x), ',')))
 
        # #ax1.set_yticklabels(list(data.index),rotation=0)
        #ax1.xaxis.set_major_formatter(mpl.ticker.FormatStrFormatter("%.f")) # setting number of decilals
@@ -545,7 +547,8 @@ def bar_chart_gr(ax, data, colors=None, total_width=0.8, single_width=.5, legend
        plt.subplots_adjust(bottom=0.1)
 
      
-       ax.ticklabel_format(axis="y",useOffset=False, style='plain', useLocale=True)
+       # ax.ticklabel_format(axis="y",useOffset=False, style='plain', useLocale=True)
+       ax.get_yaxis().set_major_formatter(mpl.ticker.FuncFormatter(lambda x, p: format(int(x), ',')))
 
        # for rotation the chart: https://stackoverflow.com/questions/22540449/how-can-i-rotate-a-matplotlib-plot-through-90-degrees
        
@@ -589,6 +592,7 @@ def line_chart_gr(ax, data):
 
        ax1.set_yticklabels(list(data.index),rotation=0)
        ax1.xaxis.set_major_formatter(mpl.ticker.FormatStrFormatter("%.2d")) # setting number of decilals
+       ax.get_yaxis().set_major_formatter(mpl.ticker.FuncFormatter(lambda x, p: format(int(x), ',')))
        ax1.legend(fontsize=7)
 
        #ax1.bar_label(x, padding=3)
