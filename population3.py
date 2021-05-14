@@ -58,7 +58,7 @@ df = df.rename(columns = {'Region, subregion, country or area':'country'})
 for col in df.loc[:, '1950':'2020']:
   df[col]  = df[col].str.replace(' ', '')
   df[col] = pd.to_numeric(df[col], errors='coerce').fillna(0) # coercing any errors to NaN
-  df[col] = df[col].apply(lambda x: f'{x:,}')
+  #df[col] = df[col].apply(lambda x: f'{x:,}')
 #df = df.dropna()
 
 ############# Reading Population growth rate data
