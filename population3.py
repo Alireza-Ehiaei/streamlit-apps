@@ -547,7 +547,7 @@ def bar_chart_gr(ax, data, colors=None, total_width=0.8, single_width=.5, legend
      
        ax.ticklabel_format(axis="y",useOffset=False, style='plain', useLocale=True)
 
-     # for rotation the chart: https://stackoverflow.com/questions/22540449/how-can-i-rotate-a-matplotlib-plot-through-90-degrees
+       # for rotation the chart: https://stackoverflow.com/questions/22540449/how-can-i-rotate-a-matplotlib-plot-through-90-degrees
        
         #For plotting chart
        st.pyplot(fig)
@@ -616,9 +616,6 @@ if (len(time_period) > 0 ) and ((len(selected_sector_group) > 0) or (len(selecte
 
  #if session_state_show.button_sent:
 
-
-     
-
    # session_state.checkboxed = True
     
 
@@ -654,8 +651,8 @@ if (len(time_period) > 0 ) and ((len(selected_sector_group) > 0) or (len(selecte
 
 
     
-elif (session_state_show.button_sent ==False):
-   st.write("Please select at least one Year, and one Groupe/Region or Country/Aria")
+# elif (session_state_show.button_sent ==False):
+#    st.write("Please select at least one Year, and one Groupe/Region or Country/Aria")
 
 
 st.sidebar.text("")
@@ -668,8 +665,11 @@ st.sidebar.text("")
 #plt.gcf().clear()
 # checkbox
 
-st.sidebar.write(''' This app is created by' [A.Ehiaei] (https://www.linkedin.com/in/alireza-ehiaei-9280971a1/), any tips appreciated.''')
+st.sidebar.write(''' This app is created by [a.ehiaei] (https://www.linkedin.com/in/alireza-ehiaei-9280971a1/), any tips appreciated.''')
     #df.numeric.describe()
 
+
+st.sidebar.text("")
+st.sidebar.text("")
 
  
