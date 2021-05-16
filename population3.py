@@ -98,12 +98,12 @@ if (selected_topic == 'Population'):
       
 
       container = st.sidebar.beta_container()
-      all_options = st.sidebar.checkbox("Select Year(s)")
+      all_options = st.sidebar.checkbox("Select all Years")
 
       if (all_options):
         selected_time_period = container.multiselect(" ", list(reversed(range(1950,2020))),list(reversed(range(1950,2020))))
       else:
-        selected_time_period = container.multiselect("Select all Years:", list(reversed(range(1950,2020))))
+        selected_time_period = container.multiselect("Select Year(s)", list(reversed(range(1950,2020))))
  
       selected_time_period = sorted(selected_time_period)
 
@@ -147,12 +147,12 @@ if (selected_topic == 'Population'):
           #   selected_sector_country = list(df['country'][df['Type'] == 'Country/Area'])
 
           container = st.sidebar.beta_container()
-          all_options = st.sidebar.checkbox("Select Country/Area")
+          all_options = st.sidebar.checkbox("Select all Countries/Areas")
 
           if (all_options):
             selected_sector_country = container.multiselect(" ", sorted_country_unique,sorted_country_unique)
           else:
-            selected_sector_country = container.multiselect("Select all Countries/Areas", sorted_country_unique)
+            selected_sector_country = container.multiselect("Select Country/Area", sorted_country_unique)
      
           selected_sector_country = sorted(selected_sector_country)
 
