@@ -45,84 +45,81 @@ Please select the sectors and dates you want to Visualize and Download the popul
 * **Data source:** [United Nations](https://population.un.org/wpp/Download/Standard/Population/)
 """)
 
+
+glbutton = st.button("Glossary")
+if glbutton:
+         st.write("Total Population:")
+         st.success("""Total Population - Both Sexes. De facto population in a country, 
+          area or region as of 1 July of the year indicated. Figures are presented in thousands.""")
+
+         st.write("Population Growth Rate: ")
+         st.success("""Average exponential rate of growth of the population over a given period. 
+          It is calculated as ln(Pt/P0)/t where t is the length of the period. It is expressed as a percentage.
+          The rate of population growth is the rate of natural increase (the difference between the birthrate
+           and the death rate) combined with the effects of migration.""")
+
+         st.write("Median Age of Population:")
+         st.success("""Age that divides the population in two parts of equal size, that is, there are as many 
+          persons with ages above the median as there are with ages below the median. It is expressed as years.""")
+
+         st.write("Population Density:")
+         st.success("""Population per square Kilometre.""")
+
+         # st.write("Population percentage by Broad Age Groups - Both Sexes:")
+         # st.success("""Percentage of Total Population by Broad Age Groups. De facto population as of 1 July of the year indicated.
+         #  Figures are expressed per 100 total population.""")
+
+         # st.write("Total Dependency Ratio:")
+         # st.success("""((Age 0-14 + Age 65+) / Age 15-64). De facto population as of 1 July of the year indicated.""")
+
+         # st.write("Child Dependency Ratio:")
+         # st.success(""" (Age 0-14 / Age 15-64) De facto population as of 1 July of the year indicated.""")
+         
+         # st.write("Old-Age Dependency Ratio:")
+         # st.success("""(Age 65+ / Age 15-64) De facto population as of 1 July of the year indicated.""")
+
+  
+
+
+
 image = Image.open("Photo_by_Ishan_@seefromthesky_on_Unsplash.jpg")  
 st.image(image, use_column_width=True, caption='Photo by Ishan @seefromthesky on Unsplash')
 
 
-############# Reading Population data
-df = pd.read_csv("WPP2019_POP_F01_1_TOTAL_POPULATION_BOTH_SEXES.csv", header=[0], encoding='latin-1')
-df.columns = df.columns.astype(str)
-df = df.rename(columns = {'Region, subregion, country or area':'country'})
-
-# converting strings to numbers
-for col in df.loc[:, '1950':'2020']:
-  df[col]  = df[col].str.replace(' ', '')
-  df[col] = pd.to_numeric(df[col], errors='coerce').fillna(0) # coercing any errors to NaN
-  #df[col] = df[col].apply(lambda x: f'{x:,}')
-#df = df.dropna()
-
-############# Reading Population growth rate data
-
-gf = pd.read_csv("WPP2019_POP_F02_POPULATION_GROWTH_RATE.csv", header=[0], encoding='latin-1')
-gf.columns = gf.columns.astype(str)
-gf = gf.rename(columns = {'Region, subregion, country or area':'country'})
-
-
-# converting strings to numbers
-
-for col in gf.loc[:, '1950-1955':'2015-2020']:
-  gf[col]  = gf[col].str.replace(' ', '')
-  gf[col] = pd.to_numeric(gf[col], errors='coerce').fillna(0) # coercing any errors to 
-  gf[col] = gf[col].apply(lambda x: f'{x:,}')
-#gf = gf.dropna()
-
 st.sidebar.header('User Input Features')
+selected_topic = st.sidebar.selectbox("Select Topic", ('Population', 'Population Growth Rate', 'Population Density', 'Median Age of Population'))
 
-selected_topic = st.sidebar.selectbox("Select Topic", ('Population', 'Population Growth Rate'))
-
-# s = st.State() 
-# if not s:
-#     s.pressed_first_button = False
-
-####################" Work on population
+#################################################### population  ###################################################
 
 if (selected_topic == 'Population'):
+
+      ############# Reading Population data
+      df = pd.read_csv(r"C:\Users\IMBS\Downloads\programming\Data\pop_data\WPP2019_POP_F01_1_TOTAL_POPULATION_BOTH_SEXES.csv", header=[0], encoding='latin-1')
+      df.columns = df.columns.astype(str)
+      df = df.rename(columns = {'Region, subregion, country or area':'country'})
+      # df = pd.DataFrame(df)
+      # df.drop(df[df.Type == "Label/Separator"].index, inplace=True)
+      # df = df.reset_index(drop=True)############# Reading Population growth rate data
+
+
+      # converting strings to numbers
+      for col in df.loc[:, '1950':'2020']:
+        df[col]  = df[col].str.replace(' ', '')
+        df[col] = pd.to_numeric(df[col], errors='coerce').fillna(0) # coercing any errors to NaN
+        #df[col] = df[col].apply(lambda x: f'{x:,}')
+      #df = df.dropna()
       
 
       st.sidebar.header('World Population Prospects 2019:')
-      st.sidebar.write(' Total population (both sexes combined) by region, subregion and country, annually for 1950-2100 (thousands)')
-
-    ############# Time selection
-
-      #selected_time_period = st.sidebar.multiselect("Select Year(s)", list(reversed(range(1950,2020))))
-      
-
-      container = st.sidebar.beta_container()
-      all_options = st.sidebar.checkbox("Select all Years")
-
-      if (all_options):
-        selected_time_period = container.multiselect(" ", list(reversed(range(1950,2020))),list(reversed(range(1950,2020))))
-      else:
-        selected_time_period = container.multiselect("Select Year(s)", list(reversed(range(1950,2020))))
- 
-      selected_time_period = sorted(selected_time_period)
+      st.sidebar.write(' Total population (both sexes combined) by region, subregion and country, annually estimates for 1950 - 2020 (thousands)')
 
 
-      selected_time_period = pd.DataFrame(selected_time_period)
-
-      time_period=[] #for listing name of columns
-      for m in range(0,len(selected_time_period)):
-        time_period.append(str(selected_time_period.loc[m,0]))
-
-      #for slicing the columns values of the chosen list of column names
-      df_selected_time_period = (df.loc[:, df.columns.isin(time_period)])
-
-    ################ Sector selection for population
+################ Sector selection for population
 
       sector = df.groupby('Type')
-      sorted_sector_unique = sorted(df['Type'].unique() )
+      sorted_sector_unique = sorted(df['Type'].unique())
 
-      sorted_sector_unique1 = list(filter(lambda x: x != 'Country/Area', sorted_sector_unique))
+      sorted_sector_unique1 = list(filter(lambda x: x != 'Country/Area' and x != 'Label/Separator' and x != 'SDG subregion', sorted_sector_unique))
       sorted_sector_unique2 = list(filter(lambda x: x == 'Country/Area', sorted_sector_unique))
 
 
@@ -138,44 +135,52 @@ if (selected_topic == 'Population'):
       if (sorted_sector_unique2):
           sorted_country_unique = list(df['country'][df['Type'] == 'Country/Area'])
 
-          # selected_sector_country = st.sidebar.multiselect('Country/Area', sorted_country_unique)
-          # st.write(len(selected_sector_group))
+          selected_sector_country = st.sidebar.multiselect('Country/Area', sorted_country_unique)
+          
+        # # For selecting all countries instead of the line above write lines below (not recommended)
+        #   container = st.sidebar.beta_container()
+        #   all_options = st.sidebar.checkbox("Select all Countries/Areas")
 
-          # all_option = st.sidebar.checkbox("Select all Countries/Areas")
-
-          # if (all_option):
-          #   selected_sector_country = list(df['country'][df['Type'] == 'Country/Area'])
-
-          container = st.sidebar.beta_container()
-          all_options = st.sidebar.checkbox("Select all Countries/Areas")
-
-          if (all_options):
-            selected_sector_country = container.multiselect(" ", sorted_country_unique,sorted_country_unique)
-          else:
-            selected_sector_country = container.multiselect("Select Country/Area", sorted_country_unique)
+        #   if (all_options):
+        #     selected_sector_country = container.multiselect("Select all Countries/Areas", sorted_country_unique,sorted_country_unique)
+        #   else:
+        #     selected_sector_country = container.multiselect("Select all Countries/Areas", sorted_country_unique)
      
           selected_sector_country = sorted(selected_sector_country)
 
 
+     # Filtering data
+      df_selected_sector_country = df.loc[ (df['country'].isin(selected_sector_country) ) ]
+      
+      df_selected_sector= df_selected_sector_group.append(df_selected_sector_country)
+    
 
 
+############# Time selection for population     
+
+      container = st.sidebar.beta_container()
+      all_options = st.sidebar.checkbox("Select all Years")
+
+      if (all_options):
+        selected_time_period = container.multiselect("Select Year(s):", list(reversed(range(1950,2020))),list(reversed(range(1950,2020))))
+      else:
+        selected_time_period = container.multiselect("Select Year(s):", list(reversed(range(1950,2020))))
+ 
+      selected_time_period = sorted(selected_time_period)
+      selected_time_period = pd.DataFrame(selected_time_period)
+
+      time_period=[] #for listing name of columns
+      for m in range(0,len(selected_time_period)):
+        time_period.append(str(selected_time_period.loc[m,0]))
+
+
+######### Table of data for population
+   
       if (len(time_period) > 0 ) and ((len(selected_sector_group) > 0) or (len(selected_sector_country) > 0)):
 
-          # Table of data
-
-        # Filtering data
-            df_selected_sector_country = df.loc[ (df['country'].isin(selected_sector_country) ) ]
-            #st.dataframe(df_selected_sector.style.background_gradient(cmap='Reds').format("{:.2%}"), height=700)
+     #for slicing the columns values of the chosen  time_periods 
+            sf1= (df_selected_sector.loc[:, df.columns.isin(time_period)])
             
-            df_selected_sector= df_selected_sector_group.append(df_selected_sector_country)
-
-
-            #for slicing the columns values of the chosen  time_periods 
-            df_selected_time_period = (df.loc[:, df.columns.isin(time_period)])
-            
-            # for slicing the row values of the chosen groupes in chosen time_periods
-            sf1 = df_selected_sector.loc[:, df_selected_sector.columns.isin(df_selected_time_period)]
-
           # names of country in the chosen rows
             sf2= df_selected_sector.loc[:,'country']      
            #To concatenate final DataFrames along column for plotting,
@@ -190,97 +195,85 @@ if (selected_topic == 'Population'):
 
 
 
+
+#################################################### Population Growth Rate ###################################################
+
+
 elif (selected_topic == 'Population Growth Rate'):
 
+          df = pd.read_csv(r"C:\Users\IMBS\Downloads\programming\Data\pop_data\WPP2019_POP_F02_POPULATION_GROWTH_RATE.csv", header=[0], encoding='latin-1')
+          df.columns = df.columns.astype(str)
+          df = df.rename(columns = {'Region, subregion, country or area':'country'})
 
 
-################ Time period selection for population growth rate
+          # converting strings to numbers
 
-    
+          for col in df.loc[:, '1950-1955':'2015-2020']:
+            df[col]  = df[col].str.replace(' ', '')
+            df[col] = pd.to_numeric(df[col], errors='coerce').fillna(0) # coercing any errors to NaN
+            
+          
           st.sidebar.header('World Population Prospects 2019:')
-          st.sidebar.write('Average annual rate of population change by region, subregion and country, 1950-2100 (percentage)')
-
-          # Selectin time period for showing population growth rate
-          # container = st.sidebar.beta_container()
-          # all_options = st.sidebar.checkbox("Select all Periods")
-
-          # if (all_options):
-          #   selected_time_period = container.multiselect("Select all Periods:", list(list(gf.loc[:, '1950-1955':'2015-2020'])), list(list(gf.loc[:, '1950-1955':'2015-2020'])))
-          # else:
-          #   selected_time_period = container.multiselect("Select all Periods:", list(list(gf.loc[:, '1950-1955':'2015-2020'])))
-     
-          # selected_time_period = sorted(selected_time_period)
-
-
-          # selected_time_period = pd.DataFrame(selected_time_period)
-
-          # time_period=[] #for listing name of columns
-          # for m in range(0,len(selected_time_period)):
-          #   time_period.append(str(selected_time_period.loc[m,0]))
-
-          # #for slicing the columns values of the chosen list of time periods
-          # gf_selected_time_period = (gf.loc[:, df.columns.isin(time_period)])
-          # gf_selected_time_period
-
-
-          selected_time_period = st.sidebar.multiselect("Select Time Period", list(list(gf.loc[:, '1950-1955':'2015-2020'])))
-          selected_time_period = sorted(selected_time_period)
-          selected_time_period = pd.DataFrame(selected_time_period)
-
-          time_period=[] #for listing name of columns
-          for m in range(0,len(selected_time_period)):
-            time_period.append(str(selected_time_period.loc[m,0]))
-
-          #for slicing the columns values of the chosen list of column names
-          gf_selected_time_period = (gf.loc[:, gf.columns.isin(selected_time_period)])
+          st.sidebar.write('Average annual rate of population change by region, subregion and country, annually estimates for 1950 - 2020 (percentage)')
 
 
 ################ Sector selection for population growth rate
 
-          sector = gf.groupby('Type')
-          sorted_sector_unique = sorted(gf['Type'].unique() )
+          sector = df.groupby('Type')
+          sorted_sector_unique = sorted(df['Type'].unique() )
 
-          sorted_sector_unique1 = list(filter(lambda x: x != 'Country/Area', sorted_sector_unique))
+          sorted_sector_unique1 = list(filter(lambda x: x != 'Country/Area' and x != 'Label/Separator' and x != 'SDG subregion', sorted_sector_unique))
           sorted_sector_unique2 = list(filter(lambda x: x == 'Country/Area', sorted_sector_unique))
 
 
-          # #Creating table for groupe in sidebar
+          # table for groupe in sidebar
           if (sorted_sector_unique1):
               selected_sector_group = st.sidebar.multiselect('Groupe/Region', sorted_sector_unique1)
               
               # Filtering data
-              gf_selected_sector_group = gf.loc[ (gf['Type'].isin(selected_sector_group) ) ]
+              df_selected_sector_group = df.loc[ (df['Type'].isin(selected_sector_group) ) ]
               #st.dataframe(gf_selected_sector.style.background_gradient(cmap='Reds').format("{:.2%}"), height=700)
               
-           # Creating table for country in sidebar
+           # table for country in sidebar
           if (sorted_sector_unique2):
-              sorted_country_unique = list(gf['country'][gf['Type'] == 'Country/Area'])
+              sorted_country_unique = list(df['country'][df['Type'] == 'Country/Area'])
               selected_sector_country = st.sidebar.multiselect('Country/Area', sorted_country_unique)
 
+          df_selected_sector_country = df.loc[ (df['country'].isin(selected_sector_country) ) ]
+              
+          df_selected_sector= df_selected_sector_group.append(df_selected_sector_country)
+              
+ 
 
-              
-              
-              
-          
+################ Time period selection for population growth rate
+
+          container = st.sidebar.beta_container()
+          all_options = st.sidebar.checkbox("Select all Periods")
+
+          if (all_options):
+            selected_time_period = container.multiselect("Select Time Period:", list(list(df.loc[:, '1950-1955':'2015-2020'])), list(list(df.loc[:, '1950-1955':'2015-2020'])))
+          else:
+            selected_time_period = container.multiselect("Select Time Period:", list(list(df.loc[:, '1950-1955':'2015-2020'])))
+     
+          selected_time_period = sorted(selected_time_period)
+          selected_time_period = pd.DataFrame(selected_time_period)
+
+
+          time_period=[] #for listing name of columns
+          for m in range(0,len(selected_time_period)):
+              time_period.append(str(selected_time_period.loc[m,0]))
+
+
+
+######### Table of data for population growth rate
+
           if (len(time_period) > 0 ) and ((len(selected_sector_group) > 0) or (len(selected_sector_country) > 0)) :
 
-
-             # Filtering data
-              gf_selected_sector_country = gf.loc[ (gf['country'].isin(selected_sector_country) ) ]
-              #st.dataframe(gf_selected_sector.style.background_gradient(cmap='Reds').format("{:.2%}"), height=700)
-              
-              gf_selected_sector= gf_selected_sector_group.append(gf_selected_sector_country)
-              
-
-              #for slicing the columns values of the chosen  time_periods 
-              gf_selected_time_period = (gf.loc[:, gf.columns.isin(time_period)])
-             
-
-            # for slicing the row values of the chosen groupes in chosen time_periods
-              sf1 = gf_selected_sector.loc[:, gf_selected_sector.columns.isin(gf_selected_time_period)]
+           # Slicing the row values of the chosen groupes in chosen time_periods
+              sf1 = df_selected_sector.loc[:, df_selected_sector.columns.isin(time_period)]
               
             # names of country in the chosen rows
-              sf2= gf_selected_sector.loc[:,'country']
+              sf2= df_selected_sector.loc[:,'country']
 
              #To concatenate final DataFrames along column for plotting,
               sf= pd.concat([sf2, sf1], axis=1)
@@ -289,36 +282,382 @@ elif (selected_topic == 'Population Growth Rate'):
               sft = (sf.T)
               sft.columns = sft.iloc[0]
               sft.drop(sft.index[0], inplace = True)
-             
-            #    st.write('Summary table for the population growth rate of (or based on); ',  ", ".join(selected_sector_group),  ", ".join(selected_sector_country) ,'in time period: ', " - ".join(time_period) )
-            #    st.dataframe(sf.style.background_gradient(cmap='viridis').format("{:.10}"), height=300)
-            
-            # def filedownload(gf):
-            #      csv = gf.to_csv(index=True)
-            #      b64 = base64.b64encode(csv.encode()).decode()  # strings <-> bytes conversions
-            #      href = f'<a href="data:file/csv;base64,{b64}" download="playerstats.csv">Download CSV File</a>'
-            #      return href
+         
+        #    st.write('Summary table for the population growth rate of (or based on); ',  ", ".join(selected_sector_group),  ", ".join(selected_sector_country) ,'in time period: ', " - ".join(time_period) )
+        #    st.dataframe(sf.style.background_gradient(cmap='viridis').format("{:.10}"), height=300)
+        
+        # def filedownload(gf):
+        #      csv = gf.to_csv(index=True)
+        #      b64 = base64.b64encode(csv.encode()).decode()  # strings <-> bytes conversions
+        #      href = f'<a href="data:file/csv;base64,{b64}" download="playerstats.csv">Download CSV File</a>'
+        #      return href
 
-            # st.markdown(filedownload(sf), unsafe_allow_html=True)
+        # st.markdown(filedownload(sf), unsafe_allow_html=True)
 
+
+
+
+#################################################### Median Age of Population ###################################################
+
+elif (selected_topic == 'Median Age of Population'):
+
+          df = pd.read_csv(r"C:\Users\IMBS\Downloads\programming\Data\pop_data\WPP2019_POP_F05_MEDIAN_AGE.csv", header=[0], encoding='latin-1')
+        
+          df.columns = df.columns.astype(str)
+          df = df.rename(columns = {'Region, subregion, country or area':'country'})
+      
+
+          # converting strings to numbers
+
+          for col in df.loc[:, '1950':'2020']:
+            df[col]  = df[col].str.replace(' ', '')
+            df[col] = pd.to_numeric(df[col], errors='coerce').fillna(0) # coercing any errors to 
+           # gf[col] = gf[col].apply(lambda x: f'{x:,}')
+           #gf = gf.dropna()
+
+          
+          st.sidebar.header('World Population Prospects 2019:')
+          st.sidebar.write('Median Age of Population by region, subregion and country, annually estimates for 1950 - 2020')
+
+
+################ Sector selection for Median Age of Population
+
+          sector = df.groupby('Type')
+          sorted_sector_unique = sorted(df['Type'].unique() )
+
+          sorted_sector_unique1 = list(filter(lambda x: x != 'Label/Separator' and x != 'Label/Separator' and x != 'SDG subregion' and x != 'Country/Area', sorted_sector_unique))
+          sorted_sector_unique2 = list(filter(lambda x: x == 'Country/Area', sorted_sector_unique))
+
+
+          # table for groupe in sidebar
+          if (sorted_sector_unique1):
+              selected_sector_group = st.sidebar.multiselect('Groupe/Region', sorted_sector_unique1)
+              
+              # Filtering data
+              df_selected_sector_group = df.loc[ (df['Type'].isin(selected_sector_group) ) ]
+              #st.dataframe(gf_selected_sector.style.background_gradient(cmap='Reds').format("{:.2%}"), height=700)
+              
+           # table for country in sidebar
+          if (sorted_sector_unique2):
+              sorted_country_unique = list(df['country'][df['Type'] == 'Country/Area'])
+              selected_sector_country = st.sidebar.multiselect('Country/Area', sorted_country_unique)
+          
+          df_selected_sector_country = df.loc[ (df['country'].isin(selected_sector_country) ) ]
+              
+          df_selected_sector= df_selected_sector_group.append(df_selected_sector_country)
+
+
+################ Time period selection for Median Age of Population
+
+          container = st.sidebar.beta_container()
+          all_options = st.sidebar.checkbox("Select all Years")
+
+          if (all_options):
+            selected_time_period = container.multiselect("Select Year(s):", list(list(df.loc[:, '1950':'2020'])), list(list(df.loc[:, '1950':'2020'])))
+          else:
+            selected_time_period = container.multiselect("Select Year(s):", list(list(df.loc[:, '1950':'2020'])))
+     
+          selected_time_period = sorted(selected_time_period)
+          selected_time_period = pd.DataFrame(selected_time_period)
+
+          time_period=[] #for listing name of columns
+          for m in range(0,len(selected_time_period)):
+            time_period.append(str(selected_time_period.loc[m,0]))
+
+   
+
+######### Table of data for Median Age of Population
+
+          if (len(time_period) > 0 ) and ((len(selected_sector_group) > 0) or (len(selected_sector_country) > 0)):
+
+                            
+           # Slicing the row values of the chosen groupes in chosen time_periods
+              sf1 = df_selected_sector.loc[:, df_selected_sector.columns.isin(time_period)]
+              
+            # names of country in the chosen rows
+              sf2= df_selected_sector.loc[:,'country']
+
+             #To concatenate final DataFrames along column for plotting,
+              sf= pd.concat([sf2, sf1], axis=1)
+           
+           #Transpode the table to have better sense
+              sft = (sf.T)
+              sft = pd.DataFrame(sft)
+              
+              sft.columns = sft.iloc[0]
+              sft.drop(sft.index[0], inplace = True)
+              
+
+
+
+
+#################################################### Population  Density ###################################################
+
+elif (selected_topic == 'Population Density'):
+
+          df = pd.read_csv(r"C:\Users\IMBS\Downloads\programming\Data\pop_data\WPP2019_POP_F06_POPULATION_DENSITY.csv", header=[0], encoding='latin-1')
+        
+          df.columns = df.columns.astype(str)
+          df = df.rename(columns = {'Region, subregion, country or area':'country'})
+      
+
+          # converting strings to numbers
+
+          for col in df.loc[:, '1950':'2020']:
+            df[col]  = df[col].str.replace(' ', '')
+            df[col] = pd.to_numeric(df[col], errors='coerce').fillna(0) # coercing any errors to 
+           # gf[col] = gf[col].apply(lambda x: f'{x:,}')
+           #gf = gf.dropna()
+
+          
+          st.sidebar.header('World Population Prospects 2019:')
+          st.sidebar.write('Population density by region, subregion and country, annually estimates for 1950 - 2020 (persons per square km)')
+
+
+################ Sector selection for Population  Density
+
+          sector = df.groupby('Type')
+          sorted_sector_unique = sorted(df['Type'].unique() )
+
+          sorted_sector_unique1 = list(filter(lambda x: x != 'Label/Separator' and x != 'Label/Separator' and x != 'SDG subregion' and x != 'Country/Area', sorted_sector_unique))
+          sorted_sector_unique2 = list(filter(lambda x: x == 'Country/Area', sorted_sector_unique))
+
+
+          # table for groupe in sidebar
+          if (sorted_sector_unique1):
+              selected_sector_group = st.sidebar.multiselect('Groupe/Region', sorted_sector_unique1)
+              
+              # Filtering data
+              df_selected_sector_group = df.loc[ (df['Type'].isin(selected_sector_group) ) ]
+              #st.dataframe(gf_selected_sector.style.background_gradient(cmap='Reds').format("{:.2%}"), height=700)
+              
+           # table for country in sidebar
+          if (sorted_sector_unique2):
+              sorted_country_unique = list(df['country'][df['Type'] == 'Country/Area'])
+              selected_sector_country = st.sidebar.multiselect('Country/Area', sorted_country_unique)
+          
+
+          df_selected_sector_country = df.loc[ (df['country'].isin(selected_sector_country) ) ]
+          
+          df_selected_sector= df_selected_sector_group.append(df_selected_sector_country)
+              
+
+
+################ Time period selection for Population  Density
+
+          container = st.sidebar.beta_container()
+          all_options = st.sidebar.checkbox("Select all Years")
+
+          if (all_options):
+            selected_time_period = container.multiselect("Select Year(s):", list(reversed(range(1950,2020))),list(reversed(range(1950,2020))))
+          else:
+            selected_time_period = container.multiselect("Select Year(s):", list(reversed(range(1950,2020))))
+     
+          selected_time_period = sorted(selected_time_period)
+          selected_time_period = pd.DataFrame(selected_time_period)
+
+          time_period=[] #for listing name of columns
+          for m in range(0,len(selected_time_period)):
+            time_period.append(str(selected_time_period.loc[m,0]))
+
+
+          
+
+
+######### Table of data for population density
+
+          if (len(time_period) > 0 ) and ((len(selected_sector_group) > 0) or (len(selected_sector_country) > 0)):
+
+           # Slicing the row values of the chosen groupes in chosen time_periods
+              sf1 = df_selected_sector.loc[:, df_selected_sector.columns.isin(time_period)]
+              
+            # names of country in the chosen rows
+              sf2= df_selected_sector.loc[:,'country']
+
+             #To concatenate final DataFrames along column for plotting,
+              sf= pd.concat([sf2, sf1], axis=1)
+           
+           #Transpode the table to have better sense
+              sft = (sf.T)
+              sft = pd.DataFrame(sft)
+              
+              sft.columns = sft.iloc[0]
+              sft.drop(sft.index[0], inplace = True)
+
+
+
+
+
+
+#################################################### population by age groupe ###################################################
+
+elif (selected_topic == 'Population by Age Group'):
+
+          df = pd.read_csv(r"C:\Users\IMBS\Downloads\programming\Data\pop_data\WPP2019_POP_F09_1_PERCENTAGE_OF_TOTAL_POPULATION_BY_BROAD_AGE_GROUP_BOTH_SEXES.csv", header=[0], encoding='latin-1')
+        
+          df.columns = df.columns.astype(str)
+          df = df.rename(columns = {'Region, subregion, country or area':'country', 'Reference date (as of 1 July)':'date'})
+      
+
+          # converting strings to numbers
+
+          for col in df.loc[:, '0-1':'90+']:
+            df[col]  = df[col].str.replace(' ', '')
+            df[col] = pd.to_numeric(df[col], errors='coerce').fillna(0) # coercing any errors to 
+           # gf[col] = gf[col].apply(lambda x: f'{x:,}')
+           #gf = gf.dropna()
+
+          
+          st.sidebar.header('World Population Prospects 2019:')
+          st.sidebar.write(' Percentage total population (both sexes combined) by broad age group, region, subregion and country, annually estimates for 1950 - 2020 (percentage)')
+   
+
+################ Sector selection for population by age groupe
+
+          sector = df.groupby('Type')
+          sorted_sector_unique = sorted(df['Type'].unique() )
+
+          sorted_sector_unique1 = list(filter(lambda x: x != 'Label/Separator' and x != 'Label/Separator' and x != 'SDG subregion' and x != 'Country/Area', sorted_sector_unique))
+          sorted_sector_unique2 = list(filter(lambda x: x == 'Country/Area', sorted_sector_unique))
+
+
+          # table for groupe in sidebar
+          if (sorted_sector_unique1):
+              selected_sector_group = st.sidebar.multiselect('Groupe/Region', sorted_sector_unique1)
+              
+              
+           # table for country in sidebar
+          if (sorted_sector_unique2):
+              sorted_country_unique = list(df['country'][df['Type'] == 'Country/Area'].unique())
+              selected_sector_country = st.sidebar.multiselect('Country/Area', sorted_country_unique)
+
+
+          df_selected_sector= selected_sector_group + (selected_sector_country)
+          df_selected_sector
+          
+
+
+
+          
+################ Age groupe selection for population by age groupe
+          
+          container = st.sidebar.beta_container()
+          all_options = st.sidebar.checkbox("Select all Age Groupes")
+
+          if (all_options):
+            selected_age_group = container.multiselect("Select Age Groupe:", list(list(df.loc[:, '0-1':'90+'])), list(list(df.loc[:, '0-1':'90+'])))
+          else:
+            selected_age_group = container.multiselect("Select Age Groupe:", list(list(df.loc[:, '0-1':'90+'])))
+     
+          selected_age_group = sorted(selected_age_group)
+          selected_age_group = pd.DataFrame(selected_age_group)
+
+          age_group=[] #for listing name of columns
+          for m in range(0,len(selected_age_group)):
+            age_group.append(str(selected_age_group.loc[m,0]))
+
+
+################ Time period selection for population by age groupe
+         
+          container = st.sidebar.beta_container()
+          all_options = st.sidebar.checkbox("Select all Years")
+
+          if (all_options):
+            selected_time_period = container.multiselect("Select Year(s):",  list(reversed(range(1950,2020, 5))),list(reversed(range(1950,2020,5))))
+          else:
+            selected_time_period = container.multiselect("Select Year(s):", list(reversed(range(1950,2020, 5))))
+     
+          selected_time_period = sorted(selected_time_period)
+          selected_time_period = pd.DataFrame(selected_time_period)
+
+          time_period=[] #for listing name of columns
+          for m in range(0,len(selected_time_period)):
+            time_period.append(str(selected_time_period.loc[m,0]))
+
+          time= pd.to_numeric(time_period)
+           
+
+######### Table of data for population by age groupe
+
+          if (len(time_period) > 0 ) and ((len(df_selected_sector) > 0) ):
+              
+              sf1  = df.loc[ (df['country'].isin(selected_sector_country) | df['Type'].isin(selected_sector_group)) & (df['date'].isin(time)), ['country', 'date'] ]
+              sf2  = df.loc[ (df['country'].isin(selected_sector_country) | df['Type'].isin(selected_sector_group) )& (df['date'].isin(time)), df.columns.isin(age_group) ]
+
+  
+             #To concatenate final DataFrames along column for plotting,
+              sf= pd.concat([sf1, sf2], axis=1)            
+
+                  
+           #Transpode the table to have better sense
+              sft = (sf.T)
+              sft = pd.DataFrame(sft)
+              
+              sft.columns = sft.iloc[0]
+              sft.drop(sft.index[0], inplace = True)
+              sf
+              
+
+
+
+
+
+#################################################### population  ###################################################
+
+
+
+
+
+
+#################################################### population  ###################################################
+
+
+
+
+
+
+
+
+#################################################### population  ###################################################
+
+
+
+
+#################################################### population  ###################################################
 
 #################### Show table #####################
 
 def show_table(data):
-
      
 
         if (selected_topic == 'Population'):
 
-           st.write('Summary table for the population of ',", ".join(selected_sector_country) ,  ", ".join(selected_sector_group),'in years: ', " - ".join(time_period) )
+           st.write('Summary table for the Population of ',", ".join(selected_sector_country) ,  ", ".join(selected_sector_group),'in time period: ', " - ".join(time_period) )
            st.dataframe(sf.style.background_gradient(cmap='viridis').format("{:.10}"), height=300)
          
 
         elif (selected_topic == 'Population Growth Rate'):
 
-           st.write('Summary table for the population growth rate of (or based on); ',  ", ".join(selected_sector_group),  ", ".join(selected_sector_country) ,'in time period: ', " - ".join(time_period) )
+           st.write('Summary table for the Population Growth Rate of (or based on); ',  ", ".join(selected_sector_group),  ", ".join(selected_sector_country) ,'in time period: ', " - ".join(time_period) )
            st.dataframe(sf.style.background_gradient(cmap='viridis').format("{:.10}"), height=300)
         
+        elif (selected_topic == 'Population Density'):
+
+           st.write('Summary table for the Population Density of (or based on); ',  ", ".join(selected_sector_group),  ", ".join(selected_sector_country) ,'in time period: ', " - ".join(time_period) )
+           st.dataframe(sf.style.background_gradient(cmap='viridis').format("{:.10}"), height=300)
+
+           
+        elif (selected_topic == 'Median Age of Population'):
+
+           st.write('Summary table for the Median Age of Population of (or based on); ',  ", ".join(selected_sector_group),  ", ".join(selected_sector_country) ,'in time period: ', " - ".join(time_period) )
+           st.dataframe(sf.style.background_gradient(cmap='viridis').format("{:.10}"), height=300)
+
+
+
+        elif (selected_topic == 'Population by Age Group'):
+
+           st.write('Summary table for the population by age group of (or based on); ',  ", ".join(df_selected_sector) ,'in time period: ', " - ".join(time_period) )
+           st.dataframe(sf.style.background_gradient(cmap='viridis').format("{:.0f}").set_precision(2), height=300)
 
        #For downloading csv file
         def filedownload(df):
@@ -328,9 +667,6 @@ def show_table(data):
              return href
 
         st.markdown(filedownload(data.T), unsafe_allow_html=True)
-    
-     
-      
 
 
 ####################### Plotting #########################
@@ -384,6 +720,16 @@ def bar_chart_time(ax, data, colors=None, total_width=0.8, single_width=.5, lege
           ax.set_title('Population Growth Rate over Time')
           ax.set_ylabel('Population Growth Rate')
 
+       elif (selected_topic == 'Population Density'):
+          ax.set_title('Population Density over Time')
+          ax.set_ylabel('Population Density')
+
+       elif (selected_topic == 'Median Age of Population'):
+          ax.set_title('Median Age of Population over Time')
+          ax.set_ylabel('Median Age of Population')
+
+          
+
 
        #number of x-tickets
        ax.set_xticks(np.arange(n_bars))
@@ -398,7 +744,9 @@ def bar_chart_time(ax, data, colors=None, total_width=0.8, single_width=.5, lege
            x_tick_lable_list.append(str(data.index[item]))
        
        label= x_tick_lable_list  
-       plt.xticks(ticks=x_tick_list,labels=label, rotation=0,fontsize=8)
+       plt.xticks(ticks=x_tick_list,labels=label, rotation=45,fontsize=8, ha="right", rotation_mode="default")
+       
+
 
        
        # ax.set_xticklabels(list(data.index))
@@ -410,7 +758,7 @@ def bar_chart_time(ax, data, colors=None, total_width=0.8, single_width=.5, lege
        plt.subplots_adjust(bottom=0.1)
 
      
-       # ax.ticklabel_format(axis="y",useOffset=False,style='plain', useLocale=True)
+       #ax.ticklabel_format(axis="y",useOffset=False,style='plain', useLocale=True)
        ax.get_yaxis().set_major_formatter(mpl.ticker.FuncFormatter(lambda x, p: format(int(x), ',')))
 
       #For plotting chart
@@ -450,12 +798,20 @@ def line_chart_time(ax, data):
           ax.set_title('Population Growth Rate over Time')
           ax.set_ylabel('Population Growth Rate')
 
+       elif (selected_topic == 'Population Density'):
+          ax.set_title('Population Density over Time')
+          ax.set_ylabel('Population Density')
+
+       elif (selected_topic == 'Median Age of Population'):
+          ax.set_title('Median Age of Population over Time')
+          ax.set_ylabel('Median Age of Population')
+
 
        #number of x-tickets
        ax.set_xticks(x)
       
       # label of x-tickets
-       ax.set_xticklabels((data.T.index),rotation=0)
+       ax.set_xticklabels((data.T.index),rotation=45)
 
 
        # Changing scientific notation of numbers
@@ -521,6 +877,14 @@ def bar_chart_gr(ax, data, colors=None, total_width=0.8, single_width=.5, legend
           ax.set_title('Population Growth Rate by Groupe/Region-Country/Aria')
           ax.set_ylabel('Population Growth Rate')
 
+       elif (selected_topic == 'Population Density'):
+          ax.set_title('Population Density by Groupe/Region-Country/Aria')
+          ax.set_ylabel('Population Density')
+
+       elif (selected_topic == 'Median Age of Population'):
+          ax.set_title('Median Age of Population over Time')
+          ax.set_ylabel('Median Age of Population')
+
 
        #number of x-tickets
        ax.set_xticks(np.arange(n_bars))
@@ -535,7 +899,7 @@ def bar_chart_gr(ax, data, colors=None, total_width=0.8, single_width=.5, legend
            x_tick_lable_list.append(str(data.T.index[item]))
        
        label= x_tick_lable_list  
-       plt.xticks(ticks=x_tick_list,labels=label, rotation=80,fontsize=8)
+       plt.xticks(ticks=x_tick_list,labels=label, rotation=45,fontsize=8)
 
        
        #ax.set_xticklabels(list(data.index))
@@ -550,7 +914,7 @@ def bar_chart_gr(ax, data, colors=None, total_width=0.8, single_width=.5, legend
        # ax.ticklabel_format(axis="y",useOffset=False, style='plain', useLocale=True)
        ax.get_yaxis().set_major_formatter(mpl.ticker.FuncFormatter(lambda x, p: format(int(x), ',')))
 
-       # for rotation the chart: https://stackoverflow.com/questions/22540449/how-can-i-rotate-a-matplotlib-plot-through-90-degrees
+     # for rotation the chart: https://stackoverflow.com/questions/22540449/how-can-i-rotate-a-matplotlib-plot-through-90-degrees
        
         #For plotting chart
        st.pyplot(fig)
@@ -586,9 +950,15 @@ def line_chart_gr(ax, data):
 
        elif (selected_topic == 'Population Growth Rate'):
           ax1.set_title('Population Growth Rate by Groupe/Region-Country/Aria')
-          ax1.set_ylabel('Groupe/Region-Country/Aria')
+          ax1.set_ylabel('')
 
+       elif (selected_topic == 'Population Density'):
+          ax.set_title('Population Density by Groupe/Region-Country/Aria')
+          ax.set_ylabel('Population Density')
 
+       elif (selected_topic == 'Median Age of Population'):
+          ax.set_title('Median Age of Population over Time')
+          ax.set_ylabel('Median Age of Population')
 
        ax1.set_yticklabels(list(data.index),rotation=0)
        ax1.xaxis.set_major_formatter(mpl.ticker.FormatStrFormatter("%.2d")) # setting number of decilals
@@ -609,56 +979,52 @@ def line_chart_gr(ax, data):
        return
  
 
-################# Plotting - showing orders
-#session_state_show = SessionState.get(show='', button_sent=False)
-#button_sent= st.sidebar.button('Show Dataset')  
-# if (button_sent)
-
-if (len(time_period) > 0 ) and ((len(selected_sector_group) > 0) or (len(selected_sector_country) > 0)):
- 
- #session_state_show.button_sent =True
-
- #if session_state_show.button_sent:
-
-   # session_state.checkboxed = True
-    
+################# Plotting Execution
 
 
-
-    # session_state.checkboxed = False
-    # selected_chart = st.radio("Select Charts ", ["Population over Time",  "Population over  Groupe/Region or Country/Aria", "Both"], index=2)
-    # st.write("selected_chart",selected_chart)
-
-    # session_state_input = SessionState.get(text='', checkboxed1=False)
-    # st.write('Select Charts:')
-    # session_state_input.text = 'Population over Time'
-    # checkboxed1= st.checkbox('Population over Time')
-    # session_state.option_2 = st.checkbox('Population over  Groupe/Region or Country/Aria')
-    # session_state.option_3 = st.checkbox('Both')
-    
-
-    # if checkboxed1:
-    #   session_state_input.checkboxed1 = True
-
+if (len(time_period) > 0 ) and (len(df_selected_sector) > 0):
 
     show_table(sf)
-
-    fig, ax = plt.subplots()
-    bar_chart_time(ax, sft, total_width=.8, single_width= 1)
-
-    fig, ax1 = plt.subplots()
-    line_chart_time(ax1, sf)
     
 
-    fig, ax = plt.subplots()
-    bar_chart_gr(ax, sft, total_width=.8, single_width= 1)
+    check = st.checkbox("Plot Population over Time")
+    #st.write('State of the checkbox:', check)
 
+    if check:
+
+           fig, ax = plt.subplots()
+           bar_chart_time(ax, sft, total_width=.8, single_width= 1)
+
+           fig, ax1 = plt.subplots()
+           line_chart_time(ax1, sf)
+
+    check1 = st.checkbox("Population over  Groupe/Region or Country/Aria")
+    if check1:
+
+            fig, ax = plt.subplots()
+            bar_chart_gr(ax, sft, total_width=.8, single_width= 1)
+
+    
+    # check2 = st.checkbox("Both")
+    # if check2:
+
+    #        fig, ax = plt.subplots()
+    #        bar_chart_time(ax, sft, total_width=.8, single_width= 1)
+
+    #        fig, ax1 = plt.subplots()
+    #        line_chart_time(ax1, sf)
+
+    #        fig, ax = plt.subplots()
+    #        bar_chart_gr(ax, sft, total_width=.8, single_width= 1)
+          
 
     
 # elif (session_state_show.button_sent ==False):
 #    st.write("Please select at least one Year, and one Groupe/Region or Country/Aria")
 
 
+st.sidebar.text("")
+st.sidebar.text("")
 st.sidebar.text("")
 st.sidebar.text("")
 
@@ -669,7 +1035,19 @@ st.sidebar.text("")
 #plt.gcf().clear()
 # checkbox
 
-st.sidebar.write(''' This app is created by [a.ehiaei] (https://www.linkedin.com/in/alireza-ehiaei-9280971a1/), any tips appreciated.''')
+st.text("")
+st.text("")
+st.text("")
+st.text("")
+
+st.text("")
+st.text("")
+st.text("")
+st.text("")
+
+
+st.markdown('***')
+st.markdown(" This app is created by [a.ehiaei] (https://www.linkedin.com/in/alireza-ehiaei-9280971a1/), any tips appreciated.")
     #df.numeric.describe()
 
 
